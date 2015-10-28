@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class CodegenOperation {
     public final List<CodegenProperty> responseHeaders = new ArrayList<CodegenProperty>();
-    public Boolean hasConsumes, hasProduces, hasParams, returnTypeIsPrimitive,
+    public Boolean hasAuthMethods, hasConsumes, hasProduces, hasParams, returnTypeIsPrimitive,
             returnSimpleType, subresourceOperation, isMapContainer, isListContainer,
             hasMore = Boolean.TRUE, isMultipart, isResponseBinary = Boolean.FALSE;
     public String path, operationId, returnType, httpMethod, returnBaseType,
@@ -75,6 +75,15 @@ public class CodegenOperation {
      */
     public boolean getHasPathParams() {
         return nonempty(pathParams);
+    }
+
+    /**
+     * Check if there's at least one form parameter
+     *
+     * @return true if any form parameter exists, false otherwise
+     */
+    public boolean getHasFormParams() {
+        return nonempty(formParams);
     }
 
 }

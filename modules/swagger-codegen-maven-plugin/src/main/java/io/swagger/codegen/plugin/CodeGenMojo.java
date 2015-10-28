@@ -36,6 +36,7 @@ import config.Config;
 import config.ConfigParser;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 
@@ -112,6 +113,9 @@ public class CodeGenMojo extends AbstractMojo {
     @Parameter(defaultValue = "true")
     private boolean addCompileSourceRoot = true;
 
+    @Parameter
+    protected Map<String, String> environmentVariables = new HashMap<String, String>();
+
     /**
      * The project being built.
      */
@@ -124,6 +128,17 @@ public class CodeGenMojo extends AbstractMojo {
 
         CodegenConfig config = CodegenConfigLoader.forName(language);
         config.setOutputDir(output.getAbsolutePath());
+
+        if (environmentVariables != null) {
+            for(String key : environmentVariables.keySet()) {
+                String value = environmentVariables.get(key);
+                if(value == null) {
+                    // don't put null values
+                    value = "";
+                }
+                System.setProperty(key, value);
+            }
+        }
 
         if (null != templateDirectory) {
             config.additionalProperties().put(TEMPLATE_DIR_PARAM, templateDirectory.getAbsolutePath());
@@ -162,7 +177,16 @@ public class CodeGenMojo extends AbstractMojo {
         
         ClientOptInput input = new ClientOptInput().opts(new ClientOpts()).swagger(swagger);
         input.setConfig(config);
-        new DefaultGenerator().opts(input).generate();
+        
+        try {
+            new DefaultGenerator().opts(input).generate();
+        } catch (Exception e) {
+            // Maven logs exceptions thrown by plugins only if invoked with -e
+        	// I find it annoying to jump through hoops to get basic diagnostic information,
+        	// so let's log it in any case:
+            getLog().error(e); 
+            throw new MojoExecutionException("Code generation failed. See above for the full exception.");
+        }
 
         if (addCompileSourceRoot) {
             project.addCompileSourceRoot(output.toString());
