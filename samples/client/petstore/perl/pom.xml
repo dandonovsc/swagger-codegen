@@ -35,7 +35,7 @@
                         <configuration>
                             <executable>perl</executable>
                             <arguments>
-                                <argument>t/01_pet_api.t</argument>
+                                <argument>tests/01_pet_api.t</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -48,7 +48,7 @@
                         <configuration>
                             <executable>perl</executable>
                             <arguments>
-                                <argument>t/02_store_api.t</argument>
+                                <argument>tests/02_store_api.t</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -61,7 +61,20 @@
                         <configuration>
                             <executable>perl</executable>
                             <arguments>
-                                <argument>t/03_api_factory.t</argument>
+                                <argument>tests/03_api_factory.t</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Test::More for Role</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>perl</executable>
+                            <arguments>
+                                <argument>tests/04_role.t</argument>
                             </arguments>
                         </configuration>
                     </execution>

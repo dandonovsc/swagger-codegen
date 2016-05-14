@@ -1,13 +1,16 @@
 package io.swagger.model;
 
-
-import io.swagger.annotations.*;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 
-@ApiModel(description = "")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JaxRSServerCodegen", date = "2015-11-05T22:31:25.130-08:00")
-public class User  {
+
+
+
+
+public class User   {
   
   private Long id = null;
   private String username = null;
@@ -18,9 +21,14 @@ public class User  {
   private String phone = null;
   private Integer userStatus = null;
 
-  
   /**
    **/
+  public User id(Long id) {
+    this.id = id;
+    return this;
+  }
+
+  
   @ApiModelProperty(value = "")
   @JsonProperty("id")
   public Long getId() {
@@ -30,9 +38,14 @@ public class User  {
     this.id = id;
   }
 
-  
   /**
    **/
+  public User username(String username) {
+    this.username = username;
+    return this;
+  }
+
+  
   @ApiModelProperty(value = "")
   @JsonProperty("username")
   public String getUsername() {
@@ -42,9 +55,14 @@ public class User  {
     this.username = username;
   }
 
-  
   /**
    **/
+  public User firstName(String firstName) {
+    this.firstName = firstName;
+    return this;
+  }
+
+  
   @ApiModelProperty(value = "")
   @JsonProperty("firstName")
   public String getFirstName() {
@@ -54,9 +72,14 @@ public class User  {
     this.firstName = firstName;
   }
 
-  
   /**
    **/
+  public User lastName(String lastName) {
+    this.lastName = lastName;
+    return this;
+  }
+
+  
   @ApiModelProperty(value = "")
   @JsonProperty("lastName")
   public String getLastName() {
@@ -66,9 +89,14 @@ public class User  {
     this.lastName = lastName;
   }
 
-  
   /**
    **/
+  public User email(String email) {
+    this.email = email;
+    return this;
+  }
+
+  
   @ApiModelProperty(value = "")
   @JsonProperty("email")
   public String getEmail() {
@@ -78,9 +106,14 @@ public class User  {
     this.email = email;
   }
 
-  
   /**
    **/
+  public User password(String password) {
+    this.password = password;
+    return this;
+  }
+
+  
   @ApiModelProperty(value = "")
   @JsonProperty("password")
   public String getPassword() {
@@ -90,9 +123,14 @@ public class User  {
     this.password = password;
   }
 
-  
   /**
    **/
+  public User phone(String phone) {
+    this.phone = phone;
+    return this;
+  }
+
+  
   @ApiModelProperty(value = "")
   @JsonProperty("phone")
   public String getPhone() {
@@ -102,10 +140,15 @@ public class User  {
     this.phone = phone;
   }
 
-  
   /**
    * User Status
    **/
+  public User userStatus(Integer userStatus) {
+    this.userStatus = userStatus;
+    return this;
+  }
+
+  
   @ApiModelProperty(value = "User Status")
   @JsonProperty("userStatus")
   public Integer getUserStatus() {
@@ -115,22 +158,57 @@ public class User  {
     this.userStatus = userStatus;
   }
 
-  
 
   @Override
-  public String toString()  {
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    User user = (User) o;
+    return Objects.equals(id, user.id) &&
+        Objects.equals(username, user.username) &&
+        Objects.equals(firstName, user.firstName) &&
+        Objects.equals(lastName, user.lastName) &&
+        Objects.equals(email, user.email) &&
+        Objects.equals(password, user.password) &&
+        Objects.equals(phone, user.phone) &&
+        Objects.equals(userStatus, user.userStatus);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, username, firstName, lastName, email, password, phone, userStatus);
+  }
+
+  @Override
+  public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class User {\n");
     
-    sb.append("  id: ").append(id).append("\n");
-    sb.append("  username: ").append(username).append("\n");
-    sb.append("  firstName: ").append(firstName).append("\n");
-    sb.append("  lastName: ").append(lastName).append("\n");
-    sb.append("  email: ").append(email).append("\n");
-    sb.append("  password: ").append(password).append("\n");
-    sb.append("  phone: ").append(phone).append("\n");
-    sb.append("  userStatus: ").append(userStatus).append("\n");
-    sb.append("}\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    username: ").append(toIndentedString(username)).append("\n");
+    sb.append("    firstName: ").append(toIndentedString(firstName)).append("\n");
+    sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
+    sb.append("    phone: ").append(toIndentedString(phone)).append("\n");
+    sb.append("    userStatus: ").append(toIndentedString(userStatus)).append("\n");
+    sb.append("}");
     return sb.toString();
   }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }
+

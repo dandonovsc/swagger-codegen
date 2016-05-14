@@ -1,64 +1,65 @@
 package io.swagger.client.model;
 
-import io.swagger.client.StringUtil;
+import java.util.Objects;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.client.model.Category;
-import java.util.*;
 import io.swagger.client.model.Tag;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
 
 
-import io.swagger.annotations.*;
 
 
-
-@ApiModel(description = "")
 public class Pet   {
   
   @SerializedName("id")
   private Long id = null;
-  
+
   @SerializedName("category")
   private Category category = null;
-  
+
   @SerializedName("name")
   private String name = null;
-  
+
   @SerializedName("photoUrls")
   private List<String> photoUrls = new ArrayList<String>();
-  
+
   @SerializedName("tags")
   private List<Tag> tags = new ArrayList<Tag>();
-  
 
-public enum StatusEnum {
-  @SerializedName("available")
-  AVAILABLE("available"),
 
-  @SerializedName("pending")
-  PENDING("pending"),
+  /**
+   * pet status in the store
+   */
+  public enum StatusEnum {
+    @SerializedName("available")
+    AVAILABLE("available"),
 
-  @SerializedName("sold")
-  SOLD("sold");
+    @SerializedName("pending")
+    PENDING("pending"),
 
-  private String value;
+    @SerializedName("sold")
+    SOLD("sold");
 
-  StatusEnum(String value) {
-    this.value = value;
+    private String value;
+
+    StatusEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
   }
-
-  @Override
-  public String toString() {
-    return value;
-  }
-}
 
   @SerializedName("status")
   private StatusEnum status = null;
-  
 
-  
   /**
    **/
   @ApiModelProperty(value = "")
@@ -69,7 +70,6 @@ public enum StatusEnum {
     this.id = id;
   }
 
-  
   /**
    **/
   @ApiModelProperty(value = "")
@@ -80,7 +80,6 @@ public enum StatusEnum {
     this.category = category;
   }
 
-  
   /**
    **/
   @ApiModelProperty(required = true, value = "")
@@ -91,7 +90,6 @@ public enum StatusEnum {
     this.name = name;
   }
 
-  
   /**
    **/
   @ApiModelProperty(required = true, value = "")
@@ -102,7 +100,6 @@ public enum StatusEnum {
     this.photoUrls = photoUrls;
   }
 
-  
   /**
    **/
   @ApiModelProperty(value = "")
@@ -113,7 +110,6 @@ public enum StatusEnum {
     this.tags = tags;
   }
 
-  
   /**
    * pet status in the store
    **/
@@ -125,20 +121,52 @@ public enum StatusEnum {
     this.status = status;
   }
 
-  
 
   @Override
-  public String toString()  {
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Pet pet = (Pet) o;
+    return Objects.equals(id, pet.id) &&
+        Objects.equals(category, pet.category) &&
+        Objects.equals(name, pet.name) &&
+        Objects.equals(photoUrls, pet.photoUrls) &&
+        Objects.equals(tags, pet.tags) &&
+        Objects.equals(status, pet.status);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, category, name, photoUrls, tags, status);
+  }
+
+  @Override
+  public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Pet {\n");
     
-    sb.append("    id: ").append(StringUtil.toIndentedString(id)).append("\n");
-    sb.append("    category: ").append(StringUtil.toIndentedString(category)).append("\n");
-    sb.append("    name: ").append(StringUtil.toIndentedString(name)).append("\n");
-    sb.append("    photoUrls: ").append(StringUtil.toIndentedString(photoUrls)).append("\n");
-    sb.append("    tags: ").append(StringUtil.toIndentedString(tags)).append("\n");
-    sb.append("    status: ").append(StringUtil.toIndentedString(status)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    category: ").append(toIndentedString(category)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    photoUrls: ").append(toIndentedString(photoUrls)).append("\n");
+    sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("}");
     return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
   }
 }

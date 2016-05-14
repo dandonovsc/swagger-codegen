@@ -1,16 +1,18 @@
 package io.swagger.client.model;
 
-import io.swagger.client.StringUtil;
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 
 
+/**
+ * Order
+ */
 
-import io.swagger.annotations.*;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-
-@ApiModel(description = "")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-10-30T16:36:47.681+08:00")
 public class Order   {
   
   private Long id = null;
@@ -18,30 +20,39 @@ public class Order   {
   private Integer quantity = null;
   private Date shipDate = null;
 
-public enum StatusEnum {
-  PLACED("placed"),
-  APPROVED("approved"),
-  DELIVERED("delivered");
+  /**
+   * Order Status
+   */
+  public enum StatusEnum {
+    PLACED("placed"),
+    APPROVED("approved"),
+    DELIVERED("delivered");
 
-  private String value;
+    private String value;
 
-  StatusEnum(String value) {
-    this.value = value;
+    StatusEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
   }
-
-  @Override
-  public String toString() {
-    return value;
-  }
-}
 
   private StatusEnum status = null;
-  private Boolean complete = null;
+  private Boolean complete = false;
 
   
   /**
    **/
-  @ApiModelProperty(value = "")
+  public Order id(Long id) {
+    this.id = id;
+    return this;
+  }
+  
+  @ApiModelProperty(example = "null", value = "")
   @JsonProperty("id")
   public Long getId() {
     return id;
@@ -50,10 +61,15 @@ public enum StatusEnum {
     this.id = id;
   }
 
-  
+
   /**
    **/
-  @ApiModelProperty(value = "")
+  public Order petId(Long petId) {
+    this.petId = petId;
+    return this;
+  }
+  
+  @ApiModelProperty(example = "null", value = "")
   @JsonProperty("petId")
   public Long getPetId() {
     return petId;
@@ -62,10 +78,15 @@ public enum StatusEnum {
     this.petId = petId;
   }
 
-  
+
   /**
    **/
-  @ApiModelProperty(value = "")
+  public Order quantity(Integer quantity) {
+    this.quantity = quantity;
+    return this;
+  }
+  
+  @ApiModelProperty(example = "null", value = "")
   @JsonProperty("quantity")
   public Integer getQuantity() {
     return quantity;
@@ -74,10 +95,15 @@ public enum StatusEnum {
     this.quantity = quantity;
   }
 
-  
+
   /**
    **/
-  @ApiModelProperty(value = "")
+  public Order shipDate(Date shipDate) {
+    this.shipDate = shipDate;
+    return this;
+  }
+  
+  @ApiModelProperty(example = "null", value = "")
   @JsonProperty("shipDate")
   public Date getShipDate() {
     return shipDate;
@@ -86,11 +112,16 @@ public enum StatusEnum {
     this.shipDate = shipDate;
   }
 
-  
+
   /**
    * Order Status
    **/
-  @ApiModelProperty(value = "Order Status")
+  public Order status(StatusEnum status) {
+    this.status = status;
+    return this;
+  }
+  
+  @ApiModelProperty(example = "null", value = "Order Status")
   @JsonProperty("status")
   public StatusEnum getStatus() {
     return status;
@@ -99,10 +130,15 @@ public enum StatusEnum {
     this.status = status;
   }
 
-  
+
   /**
    **/
-  @ApiModelProperty(value = "")
+  public Order complete(Boolean complete) {
+    this.complete = complete;
+    return this;
+  }
+  
+  @ApiModelProperty(example = "null", value = "")
   @JsonProperty("complete")
   public Boolean getComplete() {
     return complete;
@@ -111,20 +147,53 @@ public enum StatusEnum {
     this.complete = complete;
   }
 
-  
 
   @Override
-  public String toString()  {
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Order order = (Order) o;
+    return Objects.equals(this.id, order.id) &&
+        Objects.equals(this.petId, order.petId) &&
+        Objects.equals(this.quantity, order.quantity) &&
+        Objects.equals(this.shipDate, order.shipDate) &&
+        Objects.equals(this.status, order.status) &&
+        Objects.equals(this.complete, order.complete);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, petId, quantity, shipDate, status, complete);
+  }
+
+  @Override
+  public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Order {\n");
     
-    sb.append("    id: ").append(StringUtil.toIndentedString(id)).append("\n");
-    sb.append("    petId: ").append(StringUtil.toIndentedString(petId)).append("\n");
-    sb.append("    quantity: ").append(StringUtil.toIndentedString(quantity)).append("\n");
-    sb.append("    shipDate: ").append(StringUtil.toIndentedString(shipDate)).append("\n");
-    sb.append("    status: ").append(StringUtil.toIndentedString(status)).append("\n");
-    sb.append("    complete: ").append(StringUtil.toIndentedString(complete)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    petId: ").append(toIndentedString(petId)).append("\n");
+    sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
+    sb.append("    shipDate: ").append(toIndentedString(shipDate)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    complete: ").append(toIndentedString(complete)).append("\n");
     sb.append("}");
     return sb.toString();
   }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }
+

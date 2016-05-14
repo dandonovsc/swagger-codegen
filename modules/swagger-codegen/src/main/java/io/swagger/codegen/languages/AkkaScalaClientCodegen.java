@@ -26,7 +26,7 @@ import io.swagger.models.properties.LongProperty;
 import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.StringProperty;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +63,9 @@ public class AkkaScalaClientCodegen extends DefaultCodegen implements CodegenCon
      * unmarshalling problems and any other RuntimeException will be considered as ApiErrors.
      */
     protected boolean onlyOneSuccess = true;
-    Logger LOGGER = LoggerFactory.getLogger(AkkaScalaClientCodegen.class);
+
+    @SuppressWarnings("hiding")
+    protected Logger LOGGER = LoggerFactory.getLogger(AkkaScalaClientCodegen.class);
 
     public AkkaScalaClientCodegen() {
         super();
@@ -74,7 +76,7 @@ public class AkkaScalaClientCodegen extends DefaultCodegen implements CodegenCon
         apiPackage = mainPackage + ".api";
         modelPackage = mainPackage + ".model";
 
-        reservedWords = new HashSet<String>(
+        setReservedWordsLowerCase(
                 Arrays.asList(
                         "abstract", "case", "catch", "class", "def", "do", "else", "extends",
                         "false", "final", "finally", "for", "forSome", "if", "implicit",
@@ -154,16 +156,19 @@ public class AkkaScalaClientCodegen extends DefaultCodegen implements CodegenCon
         cliOptions.add(new CliOption(CodegenConstants.API_PACKAGE, CodegenConstants.API_PACKAGE_DESC));
     }
 
+    @Override
     public CodegenType getTag() {
         return CodegenType.CLIENT;
     }
 
+    @Override
     public String getName() {
         return "akka-scala";
     }
 
+    @Override
     public String getHelp() {
-        return "Generates a Scala client library base on Akka/Spray.";
+        return "Generates a Scala client library (beta) base on Akka/Spray.";
     }
 
     @Override
@@ -176,6 +181,7 @@ public class AkkaScalaClientCodegen extends DefaultCodegen implements CodegenCon
         return outputFolder + "/" + sourceFolder + "/" + apiPackage().replace('.', File.separatorChar);
     }
 
+    @Override
     public String modelFileFolder() {
         return outputFolder + "/" + sourceFolder + "/" + modelPackage().replace('.', File.separatorChar);
     }
@@ -270,7 +276,7 @@ public class AkkaScalaClientCodegen extends DefaultCodegen implements CodegenCon
         if (capitalized) {
             identifier = StringUtils.capitalize(identifier);
         }
-        if (identifier.matches("[a-zA-Z_$][\\w_$]+") && !reservedWords.contains(identifier)) {
+        if (identifier.matches("[a-zA-Z_$][\\w_$]+") && !isReservedWord(identifier)) {
             return identifier;
         }
         return escapeReservedWord(identifier);
@@ -321,6 +327,7 @@ public class AkkaScalaClientCodegen extends DefaultCodegen implements CodegenCon
         }
     }
 
+    @Override
     public String toDefaultValue(Property p) {
         if (!p.getRequired()) {
             return "None";

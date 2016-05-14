@@ -1,13 +1,19 @@
 package io.swagger.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 
 import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringMVCServerCodegen", date = "2015-10-20T10:58:42.063-07:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringMVCServerCodegen", date = "2016-05-03T13:43:02.966+02:00")
 public class Order  {
   
   private Long id = null;
@@ -17,10 +23,10 @@ public class Order  {
   public enum StatusEnum {
      placed,  approved,  delivered, 
   };
+  
   private StatusEnum status = null;
   private Boolean complete = null;
 
-  
   /**
    **/
   @ApiModelProperty(value = "")
@@ -32,7 +38,6 @@ public class Order  {
     this.id = id;
   }
 
-  
   /**
    **/
   @ApiModelProperty(value = "")
@@ -44,7 +49,6 @@ public class Order  {
     this.petId = petId;
   }
 
-  
   /**
    **/
   @ApiModelProperty(value = "")
@@ -56,7 +60,6 @@ public class Order  {
     this.quantity = quantity;
   }
 
-  
   /**
    **/
   @ApiModelProperty(value = "")
@@ -68,7 +71,6 @@ public class Order  {
     this.shipDate = shipDate;
   }
 
-  
   /**
    * Order Status
    **/
@@ -81,7 +83,6 @@ public class Order  {
     this.status = status;
   }
 
-  
   /**
    **/
   @ApiModelProperty(value = "")
@@ -93,7 +94,28 @@ public class Order  {
     this.complete = complete;
   }
 
-  
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Order order = (Order) o;
+    return Objects.equals(id, order.id) &&
+        Objects.equals(petId, order.petId) &&
+        Objects.equals(quantity, order.quantity) &&
+        Objects.equals(shipDate, order.shipDate) &&
+        Objects.equals(status, order.status) &&
+        Objects.equals(complete, order.complete);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, petId, quantity, shipDate, status, complete);
+  }
 
   @Override
   public String toString()  {

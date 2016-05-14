@@ -2,28 +2,22 @@ package io.swagger.codegen.languages;
 
 import io.swagger.codegen.*;
 import io.swagger.models.Operation;
-import io.swagger.models.properties.ArrayProperty;
-import io.swagger.models.properties.MapProperty;
-import io.swagger.models.properties.Property;
-
+import io.swagger.models.Path;
+import io.swagger.models.Swagger;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Iterator;
+import java.util.*;
 
-public class SpringMVCServerCodegen extends JavaClientCodegen implements CodegenConfig {
+public class SpringMVCServerCodegen extends JavaClientCodegen implements CodegenConfig{
     public static final String CONFIG_PACKAGE = "configPackage";
     protected String title = "Petstore Server";
     protected String configPackage = "";
+    protected String templateFileName = "api.mustache";
 
     public SpringMVCServerCodegen() {
         super();
         outputFolder = "generated-code/javaSpringMVC";
         modelTemplateFiles.put("model.mustache", ".java");
-        apiTemplateFiles.put("api.mustache", ".java");
+        apiTemplateFiles.put(templateFileName, ".java");
         embeddedTemplateDir = templateDir = "JavaSpringMVC";
         apiPackage = "io.swagger.api";
         modelPackage = "io.swagger.model";
@@ -39,28 +33,25 @@ public class SpringMVCServerCodegen extends JavaClientCodegen implements Codegen
         additionalProperties.put(CodegenConstants.API_PACKAGE, apiPackage);
         additionalProperties.put(CONFIG_PACKAGE, configPackage);
 
-        languageSpecificPrimitives = new HashSet<String>(
-                Arrays.asList(
-                        "String",
-                        "boolean",
-                        "Boolean",
-                        "Double",
-                        "Integer",
-                        "Long",
-                        "Float")
-        );
-
         cliOptions.add(new CliOption(CONFIG_PACKAGE, "configuration package for generated code"));
+
+        supportedLibraries.clear();
+        supportedLibraries.put(DEFAULT_LIBRARY, "Default Spring MVC server stub.");
+        supportedLibraries.put("j8-async", "Use async servlet feature and Java 8's default interface. Generating interface with service " +
+                "declaration is useful when using Maven plugin. Just provide a implementation with @Controller to instantiate service.");
     }
 
+    @Override
     public CodegenType getTag() {
         return CodegenType.SERVER;
     }
 
+    @Override
     public String getName() {
         return "spring-mvc";
     }
 
+    @Override
     public String getHelp() {
         return "Generates a Java Spring-MVC Server application using the SpringFox integration.";
     }
@@ -68,6 +59,11 @@ public class SpringMVCServerCodegen extends JavaClientCodegen implements Codegen
     @Override
     public void processOpts() {
         super.processOpts();
+
+        // clear model and api doc template as this codegen
+        // does not support auto-generated markdown doc at the moment
+        modelDocTemplateFiles.remove("model_doc.mustache");
+        apiDocTemplateFiles.remove("api_doc.mustache");
 
         if (additionalProperties.containsKey(CONFIG_PACKAGE)) {
             this.setConfigPackage((String) additionalProperties.get(CONFIG_PACKAGE));
@@ -125,7 +121,53 @@ public class SpringMVCServerCodegen extends JavaClientCodegen implements Codegen
         opList.add(co);
         co.baseName = basePath;
     }
+    
+    @Override
+    public void preprocessSwagger(Swagger swagger) {
+    	System.out.println("preprocessSwagger");
+        if ("/".equals(swagger.getBasePath())) {
+            swagger.setBasePath("");
+        }
 
+        String host = swagger.getHost();
+        String port = "8080";
+        if (host != null) {
+            String[] parts = host.split(":");
+            if (parts.length > 1) {
+                port = parts[1];
+            }
+        }
+        
+        this.additionalProperties.put("serverPort", port);
+        if (swagger != null && swagger.getPaths() != null) {
+            for (String pathname : swagger.getPaths().keySet()) {
+                Path path = swagger.getPath(pathname);
+                if (path.getOperations() != null) {
+                    for (Operation operation : path.getOperations()) {
+                        if (operation.getTags() != null) {
+                            List<Map<String, String>> tags = new ArrayList<Map<String, String>>();
+                            for (String tag : operation.getTags()) {
+                                Map<String, String> value = new HashMap<String, String>();
+                                value.put("tag", tag);
+                                value.put("hasMore", "true");
+                                tags.add(value);
+                            }
+                            if (tags.size() > 0) {
+                                tags.get(tags.size() - 1).remove("hasMore");
+                            }
+                            if (operation.getTags().size() > 0) {
+                                String tag = operation.getTags().get(0);
+                                operation.setTags(Arrays.asList(tag));
+                            }
+                            operation.setVendorExtension("x-tags", tags);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
         if (operations != null) {
@@ -139,8 +181,6 @@ public class SpringMVCServerCodegen extends JavaClientCodegen implements Codegen
                         }
                     }
                 }
-                System.out.println(operation.operationId);
-                io.swagger.util.Json.prettyPrint(operation);
 
                 if (operation.returnType == null) {
                     operation.returnType = "Void";
@@ -168,6 +208,24 @@ public class SpringMVCServerCodegen extends JavaClientCodegen implements Codegen
                 }
             }
         }
+        if("j8-async".equals(getLibrary())) {
+            apiTemplateFiles.remove(this.templateFileName);
+            this.templateFileName = "api-j8-async.mustache";
+            apiTemplateFiles.put(this.templateFileName, ".java");
+
+            int originalPomFileIdx = -1;
+            for (int i = 0; i < supportingFiles.size(); i++) {
+                if ("pom.xml".equals(supportingFiles.get(i).destinationFilename)) {
+                    originalPomFileIdx = i;
+                    break;
+                }
+            }
+            if (originalPomFileIdx > -1) {
+                supportingFiles.remove(originalPomFileIdx);
+            }
+            supportingFiles.add(new SupportingFile("pom-j8-async.mustache", "", "pom.xml"));
+        }
+
         return objs;
     }
 
